@@ -1,0 +1,609 @@
+-- ═══════════════════════════════════════════════
+-- 🎯 MZ AIM HUB v5 — PREMIUM LAYOUT
+-- ═══════════════════════════════════════════════
+local pg = (gethui and gethui()) or game:GetService("CoreGui")
+for _, v in ipairs(pg:GetChildren()) do
+    if v.Name:find("MZ_") then v:Destroy() end
+end
+
+local U = game:GetService("UserInputService")
+local P = game:GetService("Players")
+local R = game:GetService("RunService")
+local LP = P.LocalPlayer
+local CM = workspace.CurrentCamera
+
+local vp = CM.ViewportSize
+local isSmall = vp.X < 700
+local W = isSmall and 320 or 380
+local H = isSmall and 400 or 460
+
+-- 🎨 Premium Theme
+local T = {
+    bg = Color3.fromRGB(10, 10, 15),
+    bg2 = Color3.fromRGB(18, 15, 25),
+    bg3 = Color3.fromRGB(25, 20, 35),
+    card = Color3.fromRGB(22, 18, 32),
+    primary = Color3.fromRGB(147, 51, 234),
+    primaryDark = Color3.fromRGB(100, 30, 180),
+    accent = Color3.fromRGB(255, 140, 20),
+    success = Color3.fromRGB(34, 197, 94),
+    danger = Color3.fromRGB(239, 68, 68),
+    text = Color3.fromRGB(245, 245, 250),
+    textDim = Color3.fromRGB(150, 140, 180),
+    border = Color3.fromRGB(45, 38, 65),
+}
+
+local SG = Instance.new("ScreenGui")
+SG.Name = "MZ_AimPro"
+SG.ResetOnSpawn = false
+SG.IgnoreGuiInset = true
+SG.Parent = pg
+
+-- ═══════════ 🎨 FLOATING BUTTON ═══════════
+local MZBtn = Instance.new("ImageButton", SG)
+MZBtn.Size = UDim2.new(0, 60, 0, 60)
+MZBtn.Position = UDim2.new(0, 15, 0.4, 0)
+MZBtn.BackgroundTransparency = 1
+MZBtn.Image = "rbxassetid://99319003581219"
+MZBtn.Draggable = true
+Instance.new("UICorner", MZBtn).CornerRadius = UDim.new(1, 0)
+
+local mzStroke = Instance.new("UIStroke", MZBtn)
+mzStroke.Thickness = 3
+local hue = 0
+R.Heartbeat:Connect(function(dt)
+    hue = (hue + dt * 0.5) % 1
+    mzStroke.Color = Color3.fromHSV(hue, 1, 1)
+end)
+
+-- ═══════════ 🖼️ MAIN FRAME ═══════════
+local MF = Instance.new("Frame", SG)
+MF.Size = UDim2.new(0, W, 0, H)
+MF.Position = UDim2.new(0.5, -W/2, 0.5, -H/2)
+MF.BackgroundColor3 = T.bg
+MF.BorderSizePixel = 0
+MF.Active = true
+MF.Visible = true
+Instance.new("UICorner", MF).CornerRadius = UDim.new(0, 16)
+
+local mfStroke = Instance.new("UIStroke", MF)
+mfStroke.Color = T.primary
+mfStroke.Thickness = 1.5
+mfStroke.Transparency = 0.4
+
+-- ═══════════ 📐 HEADER (สวยขึ้น) ═══════════
+local header = Instance.new("Frame", MF)
+header.Size = UDim2.new(1, 0, 0, 60)
+header.Position = UDim2.new(0, 0, 0, 0)
+header.BackgroundColor3 = T.bg2
+header.BorderSizePixel = 0
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 16)
+
+-- Header Gradient
+local hGrad = Instance.new("UIGradient", header)
+hGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 15, 50)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 15, 35)),
+})
+hGrad.Rotation = 45
+
+-- Hide bottom corners
+local hFix = Instance.new("Frame", header)
+hFix.Size = UDim2.new(1, 0, 0, 16)
+hFix.Position = UDim2.new(0, 0, 1, -16)
+hFix.BackgroundColor3 = T.bg2
+hFix.BorderSizePixel = 0
+
+-- Logo วงกลม
+local logoBg = Instance.new("Frame", header)
+logoBg.Size = UDim2.new(0, 40, 0, 40)
+logoBg.Position = UDim2.new(0, 14, 0.5, -20)
+logoBg.BackgroundColor3 = T.primary
+logoBg.BorderSizePixel = 0
+Instance.new("UICorner", logoBg).CornerRadius = UDim.new(1, 0)
+
+local logoGrad = Instance.new("UIGradient", logoBg)
+logoGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, T.primary),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 80, 255)),
+})
+
+local logoLbl = Instance.new("TextLabel", logoBg)
+logoLbl.Size = UDim2.new(1, 0, 1, 0)
+logoLbl.BackgroundTransparency = 1
+logoLbl.Text = "MZ"
+logoLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+logoLbl.TextSize = 15
+logoLbl.Font = Enum.Font.GothamBlack
+
+-- Title
+local titleLbl = Instance.new("TextLabel", header)
+titleLbl.Size = UDim2.new(1, -110, 0, 20)
+titleLbl.Position = UDim2.new(0, 64, 0, 12)
+titleLbl.BackgroundTransparency = 1
+titleLbl.Text = "AIM HUB"
+titleLbl.TextColor3 = T.text
+titleLbl.TextSize = 15
+titleLbl.Font = Enum.Font.GothamBlack
+titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Subtitle
+local subLbl = Instance.new("TextLabel", header)
+subLbl.Size = UDim2.new(1, -110, 0, 14)
+subLbl.Position = UDim2.new(0, 64, 0, 30)
+subLbl.BackgroundTransparency = 1
+subLbl.Text = "● PRO EDITION"
+subLbl.TextColor3 = T.success
+subLbl.TextSize = 10
+subLbl.Font = Enum.Font.GothamBold
+subLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Status Badge (ขวา)
+local statusBadge = Instance.new("Frame", header)
+statusBadge.Size = UDim2.new(0, 70, 0, 22)
+statusBadge.Position = UDim2.new(1, -82, 0, 12)
+statusBadge.BackgroundColor3 = Color3.fromRGB(20, 50, 30)
+statusBadge.BorderSizePixel = 0
+Instance.new("UICorner", statusBadge).CornerRadius = UDim.new(0, 6)
+
+local statusDot = Instance.new("Frame", statusBadge)
+statusDot.Size = UDim2.new(0, 6, 0, 6)
+statusDot.Position = UDim2.new(0, 8, 0.5, -3)
+statusDot.BackgroundColor3 = T.success
+statusDot.BorderSizePixel = 0
+Instance.new("UICorner", statusDot).CornerRadius = UDim.new(1, 0)
+
+local statusTxt = Instance.new("TextLabel", statusBadge)
+statusTxt.Size = UDim2.new(1, -20, 1, 0)
+statusTxt.Position = UDim2.new(0, 18, 0, 0)
+statusTxt.BackgroundTransparency = 1
+statusTxt.Text = "ACTIVE"
+statusTxt.TextColor3 = T.success
+statusTxt.TextSize = 9
+statusTxt.Font = Enum.Font.GothamBold
+statusTxt.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Close Button
+local CloseBtn = Instance.new("TextButton", header)
+CloseBtn.Size = UDim2.new(0, 26, 0, 26)
+CloseBtn.Position = UDim2.new(1, -34, 0, 30)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(35, 25, 45)
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = T.textDim
+CloseBtn.TextSize = 13
+CloseBtn.Font = Enum.Font.GothamBold
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
+
+CloseBtn.MouseButton1Click:Connect(function() MF.Visible = false end)
+MZBtn.MouseButton1Click:Connect(function()
+    MF.Visible = not MF.Visible
+    if MF.Visible then
+        MF.Size = UDim2.new(0, W, 0, 0)
+        MF:TweenSize(UDim2.new(0, W, 0, H), "Out", "Back", 0.3)
+    end
+end)
+
+-- Drag with header
+local dg, ds, sp = false, nil, nil
+header.InputBegan:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1
+    or i.UserInputType == Enum.UserInputType.Touch then
+        dg = true; ds = i.Position; sp = MF.Position
+    end
+end)
+U.InputChanged:Connect(function(i)
+    if dg and (i.UserInputType == Enum.UserInputType.MouseMovement
+    or i.UserInputType == Enum.UserInputType.Touch) then
+        local d = i.Position - ds
+        MF.Position = UDim2.new(sp.X.Scale, sp.X.Offset + d.X, sp.Y.Scale, sp.Y.Offset + d.Y)
+    end
+end)
+U.InputEnded:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1
+    or i.UserInputType == Enum.UserInputType.Touch then dg = false end
+end)
+
+-- ═══════════ 🎯 BIG AIM TOGGLE ═══════════
+local aimCard = Instance.new("Frame", MF)
+aimCard.Size = UDim2.new(1, -20, 0, 60)
+aimCard.Position = UDim2.new(0, 10, 0, 70)
+aimCard.BackgroundColor3 = T.success
+aimCard.BorderSizePixel = 0
+Instance.new("UICorner", aimCard).CornerRadius = UDim.new(0, 12)
+
+local aimGrad = Instance.new("UIGradient", aimCard)
+aimGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, T.success),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 150, 70)),
+})
+aimGrad.Rotation = 45
+
+local aimIcon = Instance.new("TextLabel", aimCard)
+aimIcon.Size = UDim2.new(0, 50, 1, 0)
+aimIcon.BackgroundTransparency = 1
+aimIcon.Text = "🎯"
+aimIcon.TextSize = 26
+aimIcon.Font = Enum.Font.GothamBold
+
+local aimTitle = Instance.new("TextLabel", aimCard)
+aimTitle.Size = UDim2.new(1, -140, 0, 22)
+aimTitle.Position = UDim2.new(0, 54, 0, 10)
+aimTitle.BackgroundTransparency = 1
+aimTitle.Text = "AIM ASSIST"
+aimTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimTitle.TextSize = 14
+aimTitle.Font = Enum.Font.GothamBlack
+aimTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local aimSub = Instance.new("TextLabel", aimCard)
+aimSub.Size = UDim2.new(1, -140, 0, 16)
+aimSub.Position = UDim2.new(0, 54, 0, 30)
+aimSub.BackgroundTransparency = 1
+aimSub.Text = "กด E เพื่อเปิด/ปิด"
+aimSub.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimSub.TextSize = 10
+aimSub.Font = Enum.Font.Gotham
+aimSub.TextXAlignment = Enum.TextXAlignment.Left
+aimSub.TextTransparency = 0.2
+
+local aimStatus = Instance.new("TextLabel", aimCard)
+aimStatus.Size = UDim2.new(0, 70, 1, 0)
+aimStatus.Position = UDim2.new(1, -80, 0, 0)
+aimStatus.BackgroundTransparency = 1
+aimStatus.Text = "ON"
+aimStatus.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimStatus.TextSize = 18
+aimStatus.Font = Enum.Font.GothamBlack
+
+local aimBtn = Instance.new("TextButton", aimCard)
+aimBtn.Size = UDim2.new(1, 0, 1, 0)
+aimBtn.BackgroundTransparency = 1
+aimBtn.Text = ""
+
+-- ═══════════ 📊 STATS ROW ═══════════
+local statsRow = Instance.new("Frame", MF)
+statsRow.Size = UDim2.new(1, -20, 0, 40)
+statsRow.Position = UDim2.new(0, 10, 0, 138)
+statsRow.BackgroundColor3 = T.bg2
+statsRow.BorderSizePixel = 0
+Instance.new("UICorner", statsRow).CornerRadius = UDim.new(0, 10)
+
+local function makeStat(x, w, icon, val)
+    local c = Instance.new("Frame", statsRow)
+    c.Size = UDim2.new(0, w, 1, 0)
+    c.Position = UDim2.new(0, x, 0, 0)
+    c.BackgroundTransparency = 1
+
+    local ic = Instance.new("TextLabel", c)
+    ic.Size = UDim2.new(0, 24, 1, 0)
+    ic.BackgroundTransparency = 1
+    ic.Text = icon
+    ic.TextSize = 16
+    ic.Font = Enum.Font.GothamBold
+
+    local vl = Instance.new("TextLabel", c)
+    vl.Size = UDim2.new(1, -28, 1, 0)
+    vl.Position = UDim2.new(0, 24, 0, 0)
+    vl.BackgroundTransparency = 1
+    vl.Text = val
+    vl.TextColor3 = T.text
+    vl.TextSize = isSmall and 11 or 12
+    vl.Font = Enum.Font.GothamBold
+    vl.TextXAlignment = Enum.TextXAlignment.Left
+
+    return vl
+end
+
+local locksLbl = makeStat(10, isSmall and 90 or 110, "🎯", "0")
+local fpsLbl = makeStat(isSmall and 105 or 130, isSmall and 90 or 110, "📊", "60")
+local modeLbl = makeStat(isSmall and 200 or 250, isSmall and 90 or 110, "⚡", "ใกล้")
+
+-- ═══════════ 📜 SCROLL (Sections) ═══════════
+local CS = Instance.new("ScrollingFrame", MF)
+CS.Size = UDim2.new(1, -20, 1, -230)
+CS.Position = UDim2.new(0, 10, 0, 186)
+CS.BackgroundTransparency = 1
+CS.ScrollBarThickness = 3
+CS.ScrollBarImageColor3 = T.primary
+CS.CanvasSize = UDim2.new(0, 0, 0, 0)
+CS.Active = true
+
+local CL = Instance.new("UIListLayout", CS)
+CL.Padding = UDim.new(0, 10)
+CL.SortOrder = Enum.SortOrder.LayoutOrder
+
+CL:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    CS.CanvasSize = UDim2.new(0, 0, 0, CL.AbsoluteContentSize.Y + 10)
+end)
+
+-- ═══════════ 📦 SECTION BUILDER ═══════════
+local function makeSection(title, icon)
+    local sec = Instance.new("Frame", CS)
+    sec.Size = UDim2.new(1, 0, 0, 0)
+    sec.AutomaticSize = Enum.AutomaticSize.Y
+    sec.BackgroundColor3 = T.bg2
+    sec.BorderSizePixel = 0
+    Instance.new("UICorner", sec).CornerRadius = UDim.new(0, 12)
+    local st = Instance.new("UIStroke", sec)
+    st.Color = T.border
+    st.Thickness = 1
+    st.Transparency = 0.5
+
+    -- Title Bar
+    local tBar = Instance.new("Frame", sec)
+    tBar.Size = UDim2.new(1, 0, 0, 32)
+    tBar.BackgroundTransparency = 1
+
+    local tIcon = Instance.new("TextLabel", tBar)
+    tIcon.Size = UDim2.new(0, 26, 1, 0)
+    tIcon.Position = UDim2.new(0, 10, 0, 0)
+    tIcon.BackgroundTransparency = 1
+    tIcon.Text = icon
+    tIcon.TextSize = 14
+    tIcon.Font = Enum.Font.GothamBold
+
+    local tLbl = Instance.new("TextLabel", tBar)
+    tLbl.Size = UDim2.new(1, -50, 1, 0)
+    tLbl.Position = UDim2.new(0, 36, 0, 0)
+    tLbl.BackgroundTransparency = 1
+    tLbl.Text = title
+    tLbl.TextColor3 = T.textDim
+    tLbl.TextSize = 11
+    tLbl.Font = Enum.Font.GothamBold
+    tLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Line
+    local line = Instance.new("Frame", tBar)
+    line.Size = UDim2.new(1, -56, 0, 1)
+    line.Position = UDim2.new(0, 46, 0.5, 0)
+    line.BackgroundColor3 = T.border
+    line.BorderSizePixel = 0
+    line.BackgroundTransparency = 0.5
+
+    -- Content (layout)
+    local cont = Instance.new("Frame", sec)
+    cont.Size = UDim2.new(1, -20, 0, 0)
+    cont.Position = UDim2.new(0, 10, 0, 36)
+    cont.AutomaticSize = Enum.AutomaticSize.Y
+    cont.BackgroundTransparency = 1
+    local cL = Instance.new("UIListLayout", cont)
+    cL.Padding = UDim.new(0, 6)
+
+    local cFix = Instance.new("Frame", sec)
+    cFix.Size = UDim2.new(1, 0, 0, 10)
+    cFix.Position = UDim2.new(0, 0, 1, 0)
+    cFix.BackgroundTransparency = 1
+
+    return cont
+end
+
+-- ═══════════ 🎨 COMPONENTS ═══════════
+local function makeSlider(parent, name, minV, maxV, defV, cb)
+    local card = Instance.new("Frame", parent)
+    card.Size = UDim2.new(1, 0, 0, 48)
+    card.BackgroundColor3 = T.card
+    card.BorderSizePixel = 0
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 8)
+
+    local lbl = Instance.new("TextLabel", card)
+    lbl.Size = UDim2.new(1, -80, 0, 16)
+    lbl.Position = UDim2.new(0, 10, 0, 4)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = name
+    lbl.TextColor3 = T.text
+    lbl.TextSize = 11
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Font = Enum.Font.GothamBold
+
+    local vl = Instance.new("TextLabel", card)
+    vl.Size = UDim2.new(0, 60, 0, 16)
+    vl.Position = UDim2.new(1, -70, 0, 4)
+    vl.BackgroundTransparency = 1
+    vl.Text = tostring(defV)
+    vl.TextColor3 = T.accent
+    vl.TextSize = 11
+    vl.TextXAlignment = Enum.TextXAlignment.Right
+    vl.Font = Enum.Font.GothamBold
+
+    local bar = Instance.new("TextButton", card)
+    bar.Size = UDim2.new(1, -20, 0, 10)
+    bar.Position = UDim2.new(0, 10, 0, 28)
+    bar.BackgroundColor3 = Color3.fromRGB(40, 35, 55)
+    bar.BorderSizePixel = 0
+    bar.Text = ""
+    bar.AutoButtonColor = false
+    Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
+
+    local fill = Instance.new("Frame", bar)
+    fill.Size = UDim2.new(0.3, 0, 1, 0)
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+    local fg = Instance.new("UIGradient", fill)
+    fg.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, T.primary),
+        ColorSequenceKeypoint.new(1, T.accent),
+    })
+
+    local knob = Instance.new("Frame", bar)
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = UDim2.new(0.3, -8, 0.5, -8)
+    knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    knob.ZIndex = 2
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+    local ks = Instance.new("UIStroke", knob)
+    ks.Color = T.accent
+    ks.Thickness = 2
+
+    local drag = false
+    local function setX(x)
+        local a = math.clamp((x - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
+        local v = minV + (maxV - minV) * a
+        fill.Size = UDim2.new(a, 0, 1, 0)
+        knob.Position = UDim2.new(a, -8, 0.5, -8)
+        vl.Text = tostring(math.floor(v))
+        if cb then cb(v) end
+    end
+
+    bar.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1
+        or i.UserInputType == Enum.UserInputType.Touch then
+            drag = true
+            setX(i.Position.X)
+        end
+    end)
+    bar.InputEnded:Connect(function() drag = false end)
+    U.InputEnded:Connect(function() drag = false end)
+    R.RenderStepped:Connect(function()
+        if drag then setX(U:GetMouseLocation().X) end
+    end)
+end
+
+local function makeToggle(parent, name, defV, cb)
+    local card = Instance.new("TextButton", parent)
+    card.Size = UDim2.new(1, 0, 0, 36)
+    card.BackgroundColor3 = T.card
+    card.Text = ""
+    card.AutoButtonColor = false
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 8)
+
+    local lbl = Instance.new("TextLabel", card)
+    lbl.Size = UDim2.new(1, -70, 1, 0)
+    lbl.Position = UDim2.new(0, 12, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = name
+    lbl.TextColor3 = T.text
+    lbl.TextSize = 11
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local badge = Instance.new("Frame", card)
+    badge.Size = UDim2.new(0, 42, 0, 20)
+    badge.Position = UDim2.new(1, -54, 0.5, -10)
+    badge.BackgroundColor3 = defV and T.success or Color3.fromRGB(50, 45, 65)
+    badge.BorderSizePixel = 0
+    Instance.new("UICorner", badge).CornerRadius = UDim.new(0, 6)
+
+    local bt = Instance.new("TextLabel", badge)
+    bt.Size = UDim2.new(1, 0, 1, 0)
+    bt.BackgroundTransparency = 1
+    bt.Text = defV and "ON" or "OFF"
+    bt.TextColor3 = Color3.fromRGB(255, 255, 255)
+    bt.TextSize = 10
+    bt.Font = Enum.Font.GothamBlack
+
+    local stt = defV
+    card.MouseButton1Click:Connect(function()
+        stt = not stt
+        bt.Text = stt and "ON" or "OFF"
+        badge.BackgroundColor3 = stt and T.success or Color3.fromRGB(50, 45, 65)
+        if cb then cb(stt) end
+    end)
+end
+
+-- ═══════════ State ═══════════
+local state = {
+    aimOn = true,
+    aimSmooth = 0.3,
+    aimFov = 300,
+    aimRadius = 100,
+    teamCheck = false,
+    hitboxExpand = false,
+    autoPredict = false,
+    espOn = false,
+    smartAim = true,
+    priorityMode = 1,
+    toggleKey = Enum.KeyCode.E,
+    locks = 0,
+}
+
+-- ═══════════ 🎯 CROSSHAIR ═══════════
+local crosshair = Instance.new("Frame", SG)
+crosshair.Size = UDim2.new(0, state.aimRadius, 0, state.aimRadius)
+crosshair.Position = UDim2.new(0.5, -state.aimRadius/2, 0.5, -state.aimRadius/2)
+crosshair.BackgroundTransparency = 1
+crosshair.ZIndex = 999
+
+local circle = Instance.new("Frame", crosshair)
+circle.Size = UDim2.new(1, 0, 1, 0)
+circle.BackgroundTransparency = 1
+Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
+
+local cs = Instance.new("UIStroke", circle)
+cs.Color = T.danger
+cs.Thickness = 3
+cs.Transparency = 0.3
+
+local dot = Instance.new("Frame", crosshair)
+dot.Size = UDim2.new(0, 6, 0, 6)
+dot.Position = UDim2.new(0.5, -3, 0.5, -3)
+dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+dot.BorderSizePixel = 0
+Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+
+-- ═══════════ 💬 TARGET INFO ═══════════
+local tInfo = Instance.new("BillboardGui", SG)
+tInfo.Size = UDim2.new(0, 180, 0, 60)
+tInfo.StudsOffset = Vector3.new(0, 4, 0)
+tInfo.AlwaysOnTop = true
+tInfo.Enabled = false
+
+local tFrame = Instance.new("Frame", tInfo)
+tFrame.Size = UDim2.new(1, 0, 1, 0)
+tFrame.BackgroundTransparency = 1
+
+local tName = Instance.new("TextLabel", tFrame)
+tName.Size = UDim2.new(1, 0, 0, 20)
+tName.BackgroundTransparency = 1
+tName.Text = ""
+tName.TextColor3 = Color3.fromRGB(0, 255, 100)
+tName.TextStrokeTransparency = 0
+tName.TextSize = 14
+tName.Font = Enum.Font.GothamBold
+
+local tHP = Instance.new("TextLabel", tFrame)
+tHP.Size = UDim2.new(1, 0, 0, 18)
+tHP.Position = UDim2.new(0, 0, 0, 22)
+tHP.BackgroundTransparency = 1
+tHP.Text = ""
+tHP.TextColor3 = Color3.fromRGB(255, 200, 50)
+tHP.TextStrokeTransparency = 0
+tHP.TextSize = 12
+tHP.Font = Enum.Font.Gotham
+
+-- ═══════════ ESP ═══════════
+local espHL = {}
+local function mkESP(plr)
+    if plr == LP then return end
+    local function add(char)
+        if not char then return end
+        local old = char:FindFirstChild("MZ_HL")
+        if old then old:Destroy() end
+        local hl = Instance.new("Highlight", char)
+        hl.Name = "MZ_HL"
+        hl.FillColor = T.danger
+        hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+        hl.FillTransparency = 0.6
+        hl.OutlineTransparency = 0.2
+        hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        hl.Enabled = false
+        espHL[plr] = hl
+    end
+    if plr.Character then add(plr.Character) end
+    plr.CharacterAdded:Connect(add)
+end
+for _, p in ipairs(P:GetPlayers()) do mkESP(p) end
+P.PlayerAdded:Connect(mkESP)
+
+-- Hitbox
+local origSize = {}
+local function setHitbox(plr, exp)
+    if plr == LP or not plr.Character then return end
+    for _, part in ipairs(plr.Character:GetChildren()) do
+        if part:IsA("BasePart") then
+            if exp then
+                if not origSize[part] then origSize[part] = part.Size end
+                part.Size = origSize[part] * 2
+            else
+                if origSize[part] then part.Size = origSize[part] end
+            end
+ 
